@@ -1,0 +1,997 @@
+---
+title: "ISLR Solutions"
+author: "Swapnil Sharma"
+date: "July 6, 2017"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+>Problem 1
+
+Describe the null hypotheses to which the p-values given in Table 3.4
+correspond. Explain what conclusions you can draw based on these
+p-values. Your explanation should be phrased in terms of sales, TV,
+radio, and newspaper, rather than in terms of the coefficients of the
+linear model.  
+
+>Answer 1
+
+The null hypothesis is the coefficient corresponding to TV, radio and newspaper B~0~ , B~1~ , B~2~ , B~3~ is zero. The p-values for intercept and TV, radio is less than 0.05 and hance we can reject the null hypothesis concluding that the coefficient is non zero and are significant in predicting sales. But the p-value for newspaper is greater than 0.05 (alpha level of the test) suggesting we fail to reject the null hypothesis and conclude that B~3~ is zero. Thus we can conclude that TV and radio are significant in predicting sales but newspaper is not.
+
+>Problem 2
+
+Carefully explain the differences between the KNN classifier and KNN
+regression methods.
+
+>Answer 2
+
+KNN classifier classifies Y into 0 or 1 while KNN regrssion method predicts the quantitative value of Y
+
+>Problem 3
+
+Suppose we have a data set with five predictors, X1 =GPA, X2 = IQ,
+X3 = Gender (1 for Female and 0 forMale), X4 = Interaction between
+GPA and IQ, and X5 = Interaction between GPA and Gender. The
+response is starting salary after graduation (in thousands of dollars).
+Suppose we use least squares to fit the model, and get ^??0 = 50, ^??1 =
+20, ^??2 = 0.07, ^??3 = 35, ^??4 = 0.01, ^??5 = ???10.
+(a) Which answer is correct, and why?
+i. For a fixed value of IQ and GPA, males earn more on average
+than females.
+ii. For a fixed value of IQ and GPA, females earn more on
+average than males.
+iii. For a fixed value of IQ and GPA, males earn more on average
+than females provided that the GPA is high enough.
+iv. For a fixed value of IQ and GPA, females earn more on
+average than males provided that the GPA is high enough.
+(b) Predict the salary of a female with IQ of 110 and a GPA of 4.0.
+(c) True or false: Since the coefficient for the GPA/IQ interaction
+term is very small, there is very little evidence of an interaction
+effect. Justify your answer.
+
+>Answer 3
+
+###a - **iii**
+
+$Y=50 + 20 (gpa) + 0.07(iq) + 35(gender) + 0.01 (gpa * iq) - 10( gpa *gender)$
+
+$ Y = 50 + 20 k_1 + 0.07 k_2 + 35 gender + 0.01(k_1 * k_2) - 10 (k_1 * gender)$
+
+For male: (gender = 0)  $Y= 50 + 20 k_1 + 0.07 k_2 + 0.01(k_1 * k_2)$
+
+For female:(gender = 1) $Y = 50 + 20 k_1 + 0.07 k_2 + 0.01(k_1 * k_2) +35 - 10 (k_1)$
+
+
+*so once the GPA is high enough (>3.5) males earn more on average*
+
+###b - **137.1**
+
+$Y=50 + 20*(4) +0.07*(110) + 35 + 0.01*(4*110) -10*(4*1)$
+
+
+###c - **False** 
+
+The small coefficient does not indicate the less effect of the interaction term. It can be checked by looking at the p-value of the coefficient to determine its statistical significance.
+
+>Problem 4
+
+I collect a set of data (n = 100 observations) containing a single
+predictor and a quantitative response. I then fit a linear regression
+model to the data, as well as a separate cubic regression, i.e. Y =
+??0 + ??1X + ??2X2 + ??3X3 + .
+
+(a) Suppose that the true relationship between X and Y is linear,
+i.e. Y = ??0 + ??1X + . Consider the training residual sum of
+squares (RSS) for the linear regression, and also the training
+RSS for the cubic regression. Would we expect one to be lower
+than the other, would we expect them to be the same, or is there
+not enough information to tell? Justify your answer.
+
+(b) Answer (a) using test rather than training RSS.
+
+(c) Suppose that the true relationship between X and Y is not linear,
+but we don't know how far it is from linear. Consider the training
+RSS for the linear regression, and also the training RSS for the
+cubic regression. Would we expect one to be lower than the
+other, would we expect them to be the same, or is there not
+enough information to tell? Justify your answer.
+
+(d) Answer (c) using test rather than training RSS.
+
+> Answer 4
+
+##a 
+
+Polynomial regression RSS will be lower on train
+
+##b 
+
+Linear regression RSS will be lower on test
+
+##c 
+
+Polynomial regression RSS will be lower on train
+
+##d 
+
+We cannot comment on test RSS as need to know how different is the relationship from linear. if it is close to linear then linear RSS will be lower and if relationship is closer to polynomial regression than otherwise
+
+> Problem 8
+
+This question involves the use of simple linear regression on the Auto
+data set.
+
+(a) Use the lm() function to perform a simple linear regression with
+mpg as the response and horsepower as the predictor. Use the
+summary() function to print the results. Comment on the output.
+
+For example:
+
+i. Is there a relationship between the predictor and the response?
+
+ii. How strong is the relationship between the predictor and
+the response?
+
+iii. Is the relationship between the predictor and the response
+positive or negative?
+
+iv. What is the predicted mpg associated with a horsepower of 98?
+What are the associated 95% confidence and prediction
+intervals?
+
+(b) Plot the response and the predictor. Use the abline() function
+to display the least squares regression line.
+
+(c) Use the plot() function to produce diagnostic plots of the least
+squares regression fit. Comment on any problems you see with
+the fit.
+
+> Answer 8
+
+```{R}
+library(MASS)
+library(ISLR)
+y<-lm(mpg~horsepower,data=Auto)
+summary(y)
+
+#A)
+#i)The p value is less than 0.05 and hence we reject the null hypothesis and can 
+#conclude there is statitically significant relationship between horsepower and mpg
+
+#ii) The R-square is 0.6059 which is can be seen as the strength of relationship.
+
+#iii) The relationship between response and predictor is negative indicated by the sign of the coefficient
+
+predict(y,data.frame(horsepower=98),interval="confidence")
+predict(y,data.frame(horsepower=98),interval="prediction")
+#iv) Predicted value of mpg is 24.46708.Confidence interval is (23.97308 - 24.96108) and prediction interval is (14.8094 - 34.12476)
+
+#B
+plot(Auto$horsepower,Auto$mpg,col="red")
+abline(y)
+
+#C
+par(mfrow=c(2,2))
+plot(y)
+
+#residual vs fitted value plot is not random but there is a u shape visible which suggests non linear relationship between predictor and response variable
+```
+
+> Problem 9
+
+This question involves the use of multiple linear regression on the
+Auto data set.
+
+(a) Produce a scatterplot matrix which includes all of the variables
+in the data set.
+
+(b) Compute the matrix of correlations between the variables using
+the function cor(). You will need to exclude the name variable,
+cor()
+which is qualitative.
+
+(c) Use the lm() function to perform a multiple linear regression
+with mpg as the response and all other variables except name as
+the predictors. Use the summary() function to print the results.
+
+Comment on the output. For instance:
+
+i. Is there a relationship between the predictors and the response?
+
+ii. Which predictors appear to have a statistically significant
+relationship to the response?
+
+iii. What does the coefficient for the year variable suggest?
+
+(d) Use the plot() function to produce diagnostic plots of the linear
+regression fit. Comment on any problems you see with the fit.
+Do the residual plots suggest any unusually large outliers? Does
+the leverage plot identify any observations with unusually high
+leverage?
+
+(e) Use the * and : symbols to fit linear regression models with
+interaction effects. Do any interactions appear to be statistically
+significant?
+
+(f) Try a few different transformations of the variables, such as
+log(X), ???X, X2. Comment on your findings.
+
+> Answer 9
+
+```{R}
+
+#a
+
+plot(Auto)
+
+#b
+
+Autowithoutnames<-Auto
+Autowithoutnames$name=NULL
+cor(Autowithoutnames)
+
+#c
+
+y1<-lm(mpg~ .-name,data=Auto)
+summary(y1)
+
+# i) The p-value less than 0.05  for f statistic suggest that we can reject the null hypothesis and conclude there is atleast one variable which is significant in predicting mpg.
+
+# ii) displacement, weight, year and origin have statitically significant relationship with response based on lower p-values
+
+# iii) The coefficient of year variable is significant and positive which suggests that if all other variables are constant than on average mpg increases by 0.75 every year.
+
+#d
+par(mfrow=c(2,2))
+plot(y1)
+
+# residuals vs fitted value plot shows u shape which suggests non linearity in the relationship
+plot(predict(y1),rstudent(y1))
+# rstudentized residual vs fitted value plot suggests that there are certain observation for which the rstudentized residuals is >3 hence indicating outliers
+plot(hatvalues(y1))
+which.max(hatvalues(y1))
+# which.max gives the index of observation having highest leverage statistic
+
+#e)
+
+y2<-lm(mpg~.:.,Autowithoutnames)
+summary(y2)
+#interaction between displacement - acceleration, acceleration - origin, and acceleration - year are found to be statitically significant
+#Adjusted R-square increased from 0.81 to 0.88 with addition of interaction terms.
+anova(y1,y2)
+#ANOVA quantifies the relationship by testing null hypothesis of the models being equal which we reject due to low p-value concluding the model 2 is different from 1
+
+#f)
+
+y3<-lm(mpg~weight+I((weight)^2),Auto)
+summary(y3)
+plot(y3)
+# Here plot shows non normal distribution of error terms, also funnel shape is seen for residuals vs leverage chart
+```
+
+>Problem 10
+
+10. This question should be answered using the Carseats data set.
+
+(a) Fit a multiple regression model to predict Sales using Price,
+Urban, and US.
+
+(b) Provide an interpretation of each coefficient in the model. Be
+careful-some of the variables in the model are qualitative!
+
+(c) Write out the model in equation form, being careful to handle
+the qualitative variables properly.
+
+(d) For which of the predictors can you reject the null hypothesis
+H0 : ??j = 0?
+
+(e) On the basis of your response to the previous question, fit a
+smaller model that only uses the predictors for which there is
+evidence of association with the outcome.
+
+(f) How well do the models in (a) and (e) fit the data?
+
+(g) Using the model from (e), obtain 95% confidence intervals for
+the coefficient(s).
+
+(h) Is there evidence of outliers or high leverage observations in the
+model from (e)?
+
+>Answer 10
+
+##a)
+```{R}
+#a
+sales<-lm(Sales~Price+Urban+US,data=Carseats)
+summary(sales)
+#b)
+#Price is contniuous variable and its coefficient can be interpreted as average increase in sales for unit increase in prices keeping other variables constant
+#US and Urban are categorical variables with Yes coded as 1 and no as base 0 (base). The coefficient can be interpreted as avarage sales more for 1 compare to0 when other parameters are kept constant
+#c)
+#Sales=13.043469 - 0.054459*(Price) - (0.021916)*(1 ,if Urban is Yes 0 otherwise) + 1.200573 (1,if US is Yes 0 otherwise)
+#d)
+#Null hypothesis can be rejected for Price and USYes as p-value is less than 0.05
+#e
+sales1<-lm(Sales~Price+US,data=Carseats)
+summary(sales1)
+#f
+anova(sales,sales1)
+#On removing urban variable there is slight increase in adjusted r square and decrease in residual standard error. But when we do anova test to find the the difference is statistically significant we failt to reject the null hypothesis and have to conclude that both models are not significantly different.
+#g
+confint(sales1)
+#95% confidence interval for sales1 model coefficient
+#h
+plot(predict(sales1),rstudent(sales1))
+#We use the plot of rstudentized residuals (residual/ standard error) vs predicted value plot to detect presence of outliers. As rstudentized residuals are within the limit of -3 to 3 we can say that there is no outlier present in the data. outlier is defined as the observation affecting the value of Y to be significantly different from the expected trend
+lev<-hat(model.matrix(sales1))
+plot(lev)
+4/nrow(Carseats)
+plot(Carseats$Sales,Carseats$Price)
+points(Carseats[lev>0.01,]$Sales,Carseats[lev>0.01,]$Price,col='red')
+```
+
+
+Here (p+1)/n = (3+1)/400= **`r 4/nrow(Carseats)`** and we find points for which the leverage is greater than 0.01 and color them to show they are high leverage points
+
+>Problem 11
+
+In this problem we will investigate the t-statistic for the null hypothesis
+H0 : ?? = 0 in simple linear regression without an intercept. To
+begin, we generate a predictor x and a response y as follows.
+
+> set.seed (1),  
+
+> x=rnorm (100),  
+
+> y=2*x+rnorm (100)
+
+(a) Perform a simple linear regression of y onto x, without an intercept.
+Report the coefficient estimate ^??, the standard error of
+this coefficient estimate, and the t-statistic and p-value associated
+with the null hypothesis H0 : ?? = 0. Comment on these
+results. (You can perform regression without an intercept using
+the command lm(y???x+0).)
+
+(b) Now perform a simple linear regression of x onto y without an
+intercept, and report the coefficient estimate, its standard error,
+and the corresponding t-statistic and p-values associated with
+the null hypothesis H0 : ?? = 0. Comment on these results.
+
+(c) What is the relationship between the results obtained in (a) and
+(b)?
+
+(d) For the regression of Y onto X without an intercept, the tstatistic
+for H0 : ?? = 0 takes the form ^??/SE( ^ ??), where ^ ?? is
+given by (3.38), and where
+
+
+
+(These formulas are slightly different from those given in Sections
+3.1.1 and 3.1.2, since here we are performing regression
+without an intercept.) Show algebraically, and confirm numerically
+in R, that the t-statistic can be written as
+
+
+(e) Using the results from (d), argue that the t-statistic for the regression
+of y onto x is the same as the t-statistic for the regression
+of x onto y.
+
+(f) In R, show that when regression is performed with an intercept,
+the t-statistic for H0 : ??1 = 0 is the same for the regression of y
+onto x as it is for the regression of x onto y.
+
+>Answer 11
+
+##a)
+
+```{R}
+set.seed(1)
+x=rnorm(100)
+y=2*x+rnorm(100)
+slr<-lm(y~x+0)
+summary(slr)
+```
+
+
+coefficient estimate is **`r slr$coefficients`** and standard error is 0.1065.The t statistic is obtained by dividing paramter estimate with its standard error which is given by 18.73 and p-value associated with is less than 0.05 and hence we reject the null hypothesis that coefficient of x is zero.
+
+##b)
+
+```{R}
+revslr<-lm(x~y+0)
+summary(revslr)
+```
+
+coefficient estimate is **`r revslr$coefficients`** and standard error is 0.02089.The t statistic is obtained by dividing paramter estimate with its standard error which is given by 18.73 and p-value associated with is less than 0.05 and hence we reject the null hypothesis that coefficient of x is zero.
+
+##c)
+
+We get the same t statistic and p-value for both the cases and the intercept is changed and it is not the inverse so we cannot say that y=mx+c is written as x=(1/m)(y-c)
+
+##d)
+
+```{R}
+n=length(x)
+t=sqrt(n - 1)*(x %*% y)/sqrt(sum(x^2) * sum(y^2) - (x %*% y)^2)
+as.numeric(t)
+```
+
+We get t-statistic as **`r as.numeric(t)`** from the formula which is equal to the t-statistic that we obtained earlier by dividing parameter estimate beta by standard error of beta.
+
+##e)
+
+As the formula indicates it only depends on the value of x and y we get same t statistic for both the cases
+
+##f)
+
+```{R}
+revslr1<-lm(x~y)
+summary(revslr1)
+
+slr1<-lm(y~x)
+summary(slr1)
+```
+
+We get the t-statistic as **18.56** for both the cases.
+
+>Problem 12
+
+This problem involves simple linear regression without an intercept.
+
+(a) Recall that the coefficient estimate ^ ?? for the linear regression of
+Y onto X without an intercept is given by (3.38). Under what
+circumstance is the coefficient estimate for the regression of X
+onto Y the same as the coefficient estimate for the regression of
+Y onto X?
+
+(b) Generate an example in R with n = 100 observations in which
+the coefficient estimate for the regression of X onto Y is different
+from the coefficient estimate for the regression of Y onto X.
+
+(c) Generate an example in R with n = 100 observations in which
+the coefficient estimate for the regression of X onto Y is the
+same as the coefficient estimate for the regression of Y onto X.
+
+>Answer 12
+
+##a)
+
+From the equation it is clear that the parameter estimate will be equal if summation **x~i~ ^2^** equals summation **y~i~ ^2^**
+
+##b)
+
+```{R}
+x=rnorm(100)
+y=rbinom(100,2,0.3)
+eg<-lm(y~x+0)
+summary(eg)
+eg1<-lm(x~y+0)
+summary(eg1)
+```
+
+Here we get different coefficients for both cases. For case 1(y~x) coefficient estimate is **`r eg$coefficient`** while for case 2(x~y) it is 
+**`r eg1$coefficient`**
+
+##c)
+
+```{R}
+x=1:100
+y=100:1
+eg3<-lm(y~x+0)
+summary(eg3)
+eg4<-lm(x~y+0)
+summary(eg4)
+```
+
+Here we get same coefficients for both cases. For case 1(y~x) coefficient estimate is **`r eg3$coefficient`** while for case 2(x~y) it is 
+**`r eg4$coefficient`**
+
+>Problem 13
+
+In this exercise you will create some simulated data and will fit simple
+linear regression models to it. Make sure to use set.seed(1) prior to
+starting part (a) to ensure consistent results.
+
+(a) Using the rnorm() function, create a vector, x, containing 100
+observations drawn from a N(0, 1) distribution. This represents
+a feature, X.
+
+(b) Using the rnorm() function, create a vector, eps, containing 100
+observations drawn from a N(0, 0.25) distribution i.e. a normal
+distribution with mean zero and variance 0.25.
+
+(c) Using x and eps, generate a vector y according to the model
+Y = ???1 + 0.5X + error. 
+What is the length of the vector y? What are the values of ??0
+and ??1 in this linear model?
+
+(d) Create a scatterplot displaying the relationship between x and
+y. Comment on what you observe.
+
+(e) Fit a least squares linear model to predict y using x. Comment
+on the model obtained. How do ^ ??0 and ^ ??1 compare to ??0 and
+??1?
+
+(f) Display the least squares line on the scatterplot obtained in (d).
+Draw the population regression line on the plot, in a different
+color. Use the legend() command to create an appropriate legend.
+
+(g) Now fit a polynomial regression model that predicts y using x
+and x2. Is there evidence that the quadratic term improves the
+model fit? Explain your answer.
+
+(h) Repeat (a)-(f) after modifying the data generation process in
+such a way that there is less noise in the data. The model (3.39)
+should remain the same. You can do this by decreasing the variance
+of the normal distribution used to generate the error term
+ in (b). Describe your results.
+
+(i) Repeat (a)-(f) after modifying the data generation process in
+such a way that there is more noise in the data. The model
+(3.39) should remain the same. You can do this by increasing
+the variance of the normal distribution used to generate the
+error term  in (b). Describe your results.
+
+(j) What are the confidence intervals for ??0 and ??1 based on the
+original data set, the noisier data set, and the less noisy data
+set? Comment on your results.
+
+
+>Answer 13
+
+##a)
+
+```{R}
+set.seed(1)
+x=rnorm(100)
+```
+
+##b)
+
+```{R}
+eps<-rnorm(100,mean=0,sd=sqrt(0.25))
+
+```
+
+##c)
+
+```{R}
+y<- -1+0.5*x+eps
+length(y)
+```
+
+
+The length of vector y is **`r length(y)`**. The coefficient estimate  **B~0~** and **B~1~** are given by  **(-1) & 0.5 ** respectively.
+
+##d)
+
+```{R}
+plot(x,y)
+```
+
+
+As expected (linear relation between x and y from equation y = -1 +0.5x +eps) the plot shows linear relationship with certain noise
+
+##e)
+
+```{R}
+sim<-lm(y~x)
+summary(sim)
+```
+
+The coefficient estimates obtained from the simulated model sim are close to -1 and 0.5. The adjusted R-squared value being **`r summary(sim)$adj.r.squared`** explaining **`round(summary(sim)$adj.r.squared*100,2)`** percent of the variation
+
+##f)
+
+```{R}
+plot(x,y)
+abline(sim,col='red')
+abline(-1,0.5,col="green")
+legend("topleft",c("Least square","Population"),col=c("red","green"),lty=c(1,1))
+```
+
+##g)
+
+```{R}
+polyn<-lm(y~x+I(x^2))
+summary(polyn)
+anova(polyn,sim)
+```
+
+The addition of x^2^ term does not improve model. This is quantified by the anova test between two models which fails to reject the null hypothesis of two models being different. Also the p-value of x^2^ coefficient is greater than 0.5 indicating its statistical insignificance.
+
+##h
+
+```{R}
+set.seed(1)
+x=rnorm(100)
+eps<-rnorm(100,mean=0,sd=sqrt(0.1))
+y=-1+0.5*x+eps
+simlow<-lm(y~x)
+summary(simlow)
+plot(x,y)
+abline(simlow,col='red')
+abline(-1,0.5,col="blue")
+legend("topleft",c("Least square line","True Population line - less Variance"),col=c("red","blue"),lty=c(1,1))
+```
+
+Here we reduced the noise by reducing the variance of error term and keeping the equation same as before. We see the R- square has increased and plot suggest relationship is more linear. 
+
+##i
+
+```{R}
+set.seed(1)
+x=rnorm(100)
+eps<-rnorm(100,mean=0,sd=sqrt(4))
+y=-1+0.5*x+eps
+simhigh<-lm(y~x)
+summary(simhigh)
+plot(x,y)
+abline(simhigh,col='orange')
+abline(-1,0.5,col="blue")
+legend("topleft",c("Least square line","True Population line - high Variance"),col=c("orange","blue"),lty=c(1,1))
+```
+
+
+Here we increased the noise by increasing the variance of error term and keeping the equation same as before. We see the R- square has decreased and plot suggests relationship is less linear. 
+
+##j
+
+The confidence intervals for coefficients for  dataset with **less noise** is given by **`r round(confint(simlow),2)`**
+
+The confidence intervals for coefficients for **original dataset** is given by **`r round(confint(sim),2)`**. 
+
+The confidence intervals for coefficients for dataset with **more noise** is given by **`r round(confint(simhigh),2)`**. 
+
+We get that with increase in noise the confidence intervals gets **wider**.
+
+>Problem 14
+
+This problem focuses on the collinearity problem.
+
+(a) Perform the following commands in R:
+
+> set .seed (1)  
+
+> x1=runif (100)  
+
+> x2 =0.5* x1+rnorm (100) /10  
+
+> y=2+2* x1 +0.3* x2+rnorm (100)  
+
+The last line corresponds to creating a linear model in which y is
+a function of x1 and x2. Write out the form of the linear model.
+What are the regression coefficients?
+
+(b) What is the correlation between x1 and x2? Create a scatterplot
+displaying the relationship between the variables.
+
+(c) Using this data, fit a least squares regression to predict y using
+x1 and x2. Describe the results obtained. What are ^ ??0, ^ ??1, and
+^ ??2? How do these relate to the true ??0, ??1, and ??2? Can you
+reject the null hypothesis H0 : ??1 = 0? How about the null
+hypothesis H0 : ??2 = 0?
+126 3. Linear Regression
+
+(d) Now fit a least squares regression to predict y using only x1.
+Comment on your results. Can you reject the null hypothesis
+H0 : ??1 = 0?
+
+(e) Now fit a least squares regression to predict y using only x2.
+Comment on your results. Can you reject the null hypothesis
+H0 : ??1 = 0?
+
+(f) Do the results obtained in (c)-(e) contradict each other? Explain
+your answer.
+
+(g) Now suppose we obtain one additional observation, which was
+unfortunately mismeasured.
+
+> x1=c(x1 , 0.1)  
+
+> x2=c(x2 , 0.8)  
+
+> y=c(y,6)  
+
+Re-fit the linear models from (c) to (e) using this new data. What
+effect does this new observation have on the each of the models?
+In each model, is this observation an outlier? A high-leverage
+point? Both? Explain your answers.
+
+
+>Answer 14
+
+##a)
+
+```{R}
+set.seed(1)
+x1=runif(100)
+x2 =0.5* x1+rnorm (100) /10
+y=2+2* x1 +0.3* x2+rnorm (100)
+```
+
+The form of the model is $y=2+2*x1 + 0.3*x2 + error$. The regression coefficient are **2**, **2**, **0.3**
+
+##b)
+
+```{R}
+cor(x1,x2)
+plot(x1,x2)
+```
+
+
+The correlation between x1 and x2 is **`r cor(x1,x2)`** . The plot shows linear relationship between x1 and x2.
+
+##c)
+
+```{R}
+coll<-lm(y~x1+x2)
+summary(coll)
+```
+
+
+The B~0~, B~1~, and B~2~ are **2.1305, 1.4396, and 1.0097**. These coefficients are away from the regression coefficient of **2, 2, 0.3**.The null hypothesis can be rejected for intercept and x1 but cannot be rejected for x2 based on the p-values.We can reject the null hypothesis only if p-value is less than 0.05 at alpha=5%.
+
+##d)
+
+
+```{R}
+collx1<-lm(y~x1)
+summary(collx1)
+```
+
+Based on the p-value (<0.05) we can reject the null hypothesis of B~1~ =0
+
+##e)
+
+
+```{R}
+collx2<-lm(y~x2)
+summary(collx2)
+```
+
+
+Based on the p-value (<0.05) we can reject the null hypothesis of B~1~ =0
+
+
+##f)
+
+In **c** we obtained that x2 is insignificant as we could not reject the null hypothesis while in **e** we could reject the null hypothesis and declare x2 is statistically significant. This is happening due to collinearity between x1 and x2. The effect of x2 is masked because of x1 when we use x1 and x2 both in the model. Due to presence of collinearity we fail to reject the null hypothesis and thereby increase Type 1 error.
+
+
+##g)
+
+```{R}
+x1<-c(x1,0.1)
+x2<-c(x2,0.8)
+y=c(y,6)
+
+model1<-lm(y~x1+x2)
+summary(model1)
+par(mfrow=c(2,2))
+plot(model1)
+```
+
+
+The last point (index 101) is highlighted in cook's distance plot which shows that its a high leverage point.
+
+```{R}
+x1<-c(x1,0.1)
+x2<-c(x2,0.8)
+y=c(y,6)
+
+model2<-lm(y~x1)
+summary(model2)
+par(mfrow=c(2,2))
+plot(model2)
+```
+
+
+
+The last point (index 101) is highlighted in residual vs fitted value as well as cook's distance plot which shows that its an outlier as well as a  high leverage point.
+
+
+```{R}
+x1<-c(x1,0.1)
+x2<-c(x2,0.8)
+y=c(y,6)
+
+model3<-lm(y~x2)
+summary(model3)
+par(mfrow=c(2,2))
+plot(model3)
+```
+
+
+The last point (index 101) is highlighted in cook's distance plot which shows that its a high leverage point.
+
+
+>Problem 15
+
+This problem involves the Boston data set, which we saw in the lab
+for this chapter. We will now try to predict per capita crime rate
+using the other variables in this data set. In other words, per capita
+crime rate is the response, and the other variables are the predictors.
+
+(a) For each predictor, fit a simple linear regression model to predict
+the response. Describe your results. In which of the models is
+there a statistically significant association between the predictor
+and the response? Create some plots to back up your assertions.
+
+(b) Fit a multiple regression model to predict the response using
+all of the predictors. Describe your results. For which predictors
+can we reject the null hypothesis $H0 : ??j = 0?$
+
+(c) How do your results from (a) compare to your results from (b)?
+Create a plot displaying the univariate regression coefficients
+from (a) on the x-axis, and the multiple regression coefficients
+from (b) on the y-axis. That is, each predictor is displayed as a
+single point in the plot. Its coefficient in a simple linear regression
+model is shown on the x-axis, and its coefficient estimate
+in the multiple linear regression model is shown on the y-axis.
+
+(d) Is there evidence of non-linear association between any of the
+predictors and the response? To answer this question, for each
+predictor X, fit a model of the form
+
+$Y = ??0 + ??1X + ??2X2 + ??3X3 + error$
+
+>Answer 15
+
+##a)
+
+```{R}
+boston.zn<-lm(crim~zn,data=Boston)
+summary(boston.zn)
+
+boston.indus<-lm(crim~indus,data=Boston)
+summary(boston.indus)
+
+boston.chas<-lm(crim~chas,data=Boston)
+summary(boston.chas)
+
+boston.nox<-lm(crim~nox,data=Boston)
+summary(boston.nox)
+
+boston.rm<-lm(crim~rm,data=Boston)
+summary(boston.rm)
+
+boston.age<-lm(crim~age,data=Boston)
+summary(boston.age)
+
+boston.dis<-lm(crim~dis,data=Boston)
+summary(boston.dis)
+
+boston.rad<-lm(crim~rad,data=Boston)
+summary(boston.rad)
+
+boston.tax<-lm(crim~tax,data=Boston)
+summary(boston.tax)
+
+boston.ptratio<-lm(crim~ptratio,data=Boston)
+summary(boston.ptratio)
+
+boston.black<-lm(crim~black,data=Boston)
+summary(boston.black)
+
+boston.lstat<-lm(crim~lstat,data=Boston)
+summary(boston.lstat)
+
+boston.medv<-lm(crim~medv,data=Boston)
+summary(boston.medv)
+```
+
+
+Above models show that only chas variable is not significant in predicting the per capita crime rate. Based on the p-value of its t statistic we cannot reject the null hypothesis. For every other variable the p-value is too small and we can reject the null hypothesis and conclude that there is statistical significant relationship between predictor and response.
+
+##b)
+
+```{R}
+boston.all<-lm(crim~.,Boston)
+summary(boston.all)
+```
+
+From the summary  we can say that the null hypothesis can be rejected for variables ** zn, dis, rad, black, medv** as their p-value is less than 0.05.
+
+##c)
+```{R}
+simple<-vector("numeric",0)
+simple<-c(simple,boston.zn$coefficients[2])
+simple<-c(simple,boston.indus$coefficients[2])
+simple<-c(simple,boston.chas$coefficients[2])
+simple<-c(simple,boston.nox$coefficients[2])
+simple<-c(simple,boston.rm$coefficients[2])
+simple<-c(simple,boston.age$coefficients[2])
+simple<-c(simple,boston.dis$coefficients[2])
+simple<-c(simple,boston.rad$coefficients[2])
+simple<-c(simple,boston.tax$coefficients[2])
+simple<-c(simple,boston.ptratio$coefficients[2])
+simple<-c(simple,boston.black$coefficients[2])
+simple<-c(simple,boston.lstat$coefficients[2])
+simple<-c(simple,boston.medv$coefficients[2])
+multi<-vector("numeric",0)
+multi<-c(multi,boston.all$coefficients)
+multi<-multi[-1]
+plot(simple,multi,col='blue')
+```
+
+
+It can be seen from the plot that the values for coefficient for variable is different when modelled alone compared to model having all together.
+
+##d)
+
+```{R}
+boston.zn1<-lm(crim~poly(zn,3),data=Boston)
+summary(boston.zn1)
+par(mfrow=c(2,2))
+plot(boston.zn1)
+
+boston.indus1<-lm(crim~poly(indus,3),data=Boston)
+summary(boston.indus1)
+par(mfrow=c(2,2))
+plot(boston.indus1)
+
+boston.nox1<-lm(crim~poly(nox,3),data=Boston)
+summary(boston.nox1)
+par(mfrow=c(2,2))
+
+plot(boston.nox1)
+
+boston.rm1<-lm(crim~poly(rm,3),data=Boston)
+summary(boston.rm1)
+par(mfrow=c(2,2))
+
+plot(boston.rm1)
+
+boston.age1<-lm(crim~poly(age,3),data=Boston)
+summary(boston.age1)
+par(mfrow=c(2,2))
+
+plot(boston.age1)
+
+boston.dis1<-lm(crim~poly(dis,3),data=Boston)
+summary(boston.dis1)
+par(mfrow=c(2,2))
+
+plot(boston.dis1)
+
+boston.rad1<-lm(crim~poly(rad,3),data=Boston)
+summary(boston.rad1)
+plot(boston.rad1)
+
+boston.tax1<-lm(crim~poly(tax,3),data=Boston)
+summary(boston.tax1)
+par(mfrow=c(2,2))
+
+plot(boston.tax1)
+
+boston.ptratio1<-lm(crim~poly(ptratio,3),data=Boston)
+summary(boston.ptratio1)
+plot(boston.ptratio1)
+
+boston.black1<-lm(crim~poly(black,3),data=Boston)
+summary(boston.black1)
+par(mfrow=c(2,2))
+
+plot(boston.black1)
+
+boston.lstat1<-lm(crim~poly(lstat,3),data=Boston)
+summary(boston.lstat1)
+par(mfrow=c(2,2))
+
+plot(boston.lstat1)
+
+boston.medv1<-lm(crim~poly(medv,3),data=Boston)
+summary(boston.medv1)
+par(mfrow=c(2,2))
+
+plot(boston.medv1)
+```
+
+From the summary of each model it is clear that cubic relationship between predictor and response is  significant for ** indus, nox, age, dis, ptratio, and medv** variables indicating non linear relationship. For **black** variable neither cubic nor quadratic coefficient is significant suggesting no non linear relationship visible.
+
+
