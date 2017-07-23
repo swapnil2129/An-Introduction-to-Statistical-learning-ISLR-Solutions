@@ -1,0 +1,640 @@
+---
+title: 'An Introduction to Statistical Learning (ISLR) Solutions: Chapter 5'
+author: "Swapnil Sharma"
+date: "July 22, 2017"
+output: html_document
+---
+
+#Chapter 5 Resampling:
+
+### *Cross Validation & Bootstrapping*
+
+>Applied (5-9)
+
+
+#{.tabset}
+
+
+##**Problem 5**
+
+>In Chapter 4, we used logistic regression to predict the probability of
+default using income and balance on the Default data set. We will
+now estimate the test error of this logistic regression model using the
+validation set approach. Do not forget to set a random seed before
+beginning your analysis.
+
+###**(a)**
+
+>Fit a logistic regression model that uses income and balance to
+predict default.
+
+###**Solution (a)**
+
+```{R}
+library(ISLR)
+library(MASS)
+attach(Default)
+set.seed(1)
+#i
+lr<-glm(default~income+balance,family = binomial,data=Default)
+summary(lr)
+pd<-predict(lr,Default$default,type="response")
+pd.class<-ifelse(pd>0.5,"Yes","No")
+round(mean(Default$default!=pd.class),4)
+```
+
+>The logistic regression model is built using the entire data set and missclassification rate is calculated as **`r round(mean(Default$default!=pd.class),4)`**
+
+###**(b)**
+
+>Using the validation set approach, estimate the test error of this
+model. In order to do this, you must perform the following steps:
+>
+>i. Split the sample set into a training set and a validation set.
+>
+>ii. Fit a multiple logistic regression model using only the training
+observations.
+>
+>iii. Obtain a prediction of default status for each individual in
+the validation set by computing the posterior probability of
+default for that individual, and classifying the individual to
+the default category if the posterior probability is greater
+than 0.5.
+>
+>iv. Compute the validation set error, which is the fraction of
+the observations in the validation set that are misclassified.
+
+
+###**Solution (b)**
+
+```{R}
+subset<-sample(nrow(Default),nrow(Default)*0.9)
+default.train<-Default[subset,]
+default.test<-Default[-subset,]
+#iii
+lr.90<-glm(default~income+balance,family = binomial,data=default.train)
+predict.90<-predict(lr.90,default.test,type="response")
+class.90<-ifelse(predict.90>0.5,"Yes","No")
+#iv
+table(default.test$default,class.90,dnn=c("Actual","Predicted"))
+round(mean(class.90!=default.test$default),4)
+```
+
+>The Data is splitted into training and validation sets in 50:10 ratio. The missclassification rate is calculated as **`r round(mean(class.90!=default.test$default),4)`**
+
+
+###**(c)**
+
+>Repeat the process in (b) three times, using three different splits
+of the observations into a training set and a validation set. Comment
+on the results obtained.
+
+###**Solution (c)**
+
+
+```{R}
+set.seed(1)
+subset<-sample(nrow(Default),nrow(Default)*0.8)
+default.train<-Default[subset,]
+default.test<-Default[-subset,]
+lr.80<-glm(default~income+balance,family = binomial,data=default.train)
+predict.80<-predict(lr.80,default.test,type="response")
+class.80<-ifelse(predict.80>0.5,"Yes","No")
+#iv
+mr80<-round(mean(class.80!=default.test$default),4)
+
+
+subset<-sample(nrow(Default),nrow(Default)*0.7)
+default.train<-Default[subset,]
+default.test<-Default[-subset,]
+#iii
+lr.70<-glm(default~income+balance,family = binomial,data=default.train)
+predict.70<-predict(lr.70,default.test,type="response")
+class.70<-ifelse(predict.70>0.5,"Yes","No")
+#iv
+mr70<-round(mean(class.70!=default.test$default),4)
+
+subset<-sample(nrow(Default),nrow(Default)*0.5)
+default.train<-Default[subset,]
+default.test<-Default[-subset,]
+#iii
+lr.50<-glm(default~income+balance,family = binomial,data=default.train)
+predict.50<-predict(lr.50,default.test,type="response")
+class.50<-ifelse(predict.50>0.5,"Yes","No")
+#iv
+mr50<-round(mean(class.50!=default.test$default),4)
+```
+
+
+>The data set is splitted into three different ratios and the model is fitted on training set and the misclassification rate is calculated on test set.
+>
+>Missclassification rate **(Train:Test--80:20): `r mr80`**
+>
+>Missclassification rate **(Train:Test--70:30): `r mr70`**
+>
+>Missclassification rate **(Train:Test--50:50): `r mr50`**
+>
+>
+>It is observed that error rate is different for different samples
+
+
+###**(d)**
+
+>Now consider a logistic regression model that predicts the probability
+of default using income, balance, and a dummy variable
+for student. Estimate the test error for this model using the validation
+set approach. Comment on whether or not including a
+dummy variable for student leads to a reduction in the test error
+rate.
+
+###**Solution(d)**
+
+```{R}
+set.seed(1)
+subset<-sample(nrow(Default),nrow(Default)*0.7)
+default.train<-Default[subset,]
+default.test<-Default[-subset,]
+#iii
+lr.70<-glm(default~income+balance+student,family = binomial,data=default.train)
+summary(lr.70)
+predict.70<-predict(lr.70,default.test,type="response")
+class.70<-ifelse(predict.70>0.7,"Yes","No")
+#iv
+table(default.test$default,class.70,dnn=c("Actual","Predicted"))
+round(mean(class.70!=default.test$default),4)
+```
+
+
+>The missclassification rate is **`r round(mean(class.50!=default.test$default),4)`** when dummy variable for student is included. It does not lead to a reduction in the test error rate.
+
+
+##**Problem 6**
+
+>We continue to consider the use of a logistic regression model to
+predict the probability of default using income and balance on the
+Default data set. In particular, we will now compute estimates for
+the standard errors of the income and balance logistic regression coefficients
+in two different ways: (1) using the bootstrap, and (2) using
+the standard formula for computing the standard errors in the glm()
+function. Do not forget to set a random seed before beginning your
+analysis.
+
+###**(a)**
+
+>Using the summary() and glm() functions, determine the estimated
+standard errors for the coefficients associated with income
+and balance in a multiple logistic regression model that uses
+both predictors.
+
+###**Solution (a)**
+
+
+```{R}
+set.seed(1)
+lr<-glm(default~income+balance,family = binomial,data=Default)
+summary(lr)
+```
+
+The standard error of coefficients are tabulated above for the entire data set and with the help of built in R function
+
+
+###**(b)**
+
+>Write a function, boot.fn(), that takes as input the Default data
+set as well as an index of the observations, and that outputs
+the coefficient estimates for income and balance in the multiple
+logistic regression model.
+
+
+###**Solution (b)**
+
+```{R}
+boot.fn<-function(data,index){
+  fit<-glm(default~income+balance,data=data,family="binomial",subset=index)
+  return(coef(fit))
+}
+```
+
+
+>The function boot.fn is defind so that it takes in the data and gives the coefficient estimate for the given index
+
+###**(c)**
+
+>Use the boot() function together with your boot.fn() function to
+estimate the standard errors of the logistic regression coefficients
+for income and balance.
+
+
+###**Solution (c)**
+
+```{R}
+library(boot)
+boot(Default,boot.fn,100)
+```
+
+>The standard error of coefficient estimate is calculated using library boot and boot.fn function defined above
+
+###**(d)**
+
+>Comment on the estimated standard errors obtained using the
+glm() function and using your bootstrap function.
+
+###**Solution (d)**
+
+>The standard error of coefficient estimates found from two methods are pretty close
+
+
+##**Problem 7**
+
+>In Sections 5.3.2 and 5.3.3, we saw that the cv.glm() function can be
+used in order to compute the LOOCV test error estimate. Alternatively,
+one could compute those quantities using just the glm() and
+predict.glm() functions, and a for loop. You will now take this approach
+in order to compute the LOOCV error for a simple logistic
+regression model on the Weekly data set. Recall that in the context
+of classification problems, the LOOCV error is given in (5.4).
+
+
+###**(a)**
+
+>Fit a logistic regressionmodel that predicts Direction using Lag1
+and Lag2.
+
+###**Solution (a)**
+
+```{R}
+attach(Weekly)
+set.seed(1)
+weekly<-glm(Direction~Lag1+Lag2,family = binomial,data=Weekly)
+summary(weekly)
+```
+
+###**(b)**
+
+>Fit a logistic regressionmodel that predicts Direction using Lag1
+and Lag2 using all but the first observation.
+
+###**Solution (b)**
+
+```{R}
+weekly1<-glm(Direction~Lag1+Lag2,family = binomial,data=Weekly[-1,])
+```
+
+###**(c)**
+
+>Use the model from (b) to predict the direction of the first observation.
+You can do this by predicting that the first observation
+will go up if P(Direction="Up"|Lag1, Lag2) > 0.5. Was this observation
+correctly classified?
+
+###**Solution (c)**
+
+```{R}
+predictweekly<-predict(weekly,Weekly[1,],type = "response")
+predictweekly.class<-ifelse(predictweekly>0.5,"Up","Down")
+predictweekly.class
+```
+
+
+>The predicted direction from the model for the first observation is **`r predictweekly.class`**.
+
+
+###**(d)**
+
+>Write a for loop from i = 1 to i = n, where n is the number of
+observations in the data set, that performs each of the following
+steps:
+
+i. Fit a logistic regression model using all but the ith observation
+to predict Direction using Lag1 and Lag2.
+
+ii. Compute the posterior probability of the market moving up
+for the ith observation.
+
+iii. Use the posterior probability for the ith observation in order
+to predict whether or not the market moves up.
+
+iv. Determine whether or not an error was made in predicting
+the direction for the ith observation. If an error was made,
+then indicate this as a 1, and otherwise indicate it as a 0.
+
+###**Solution (d)**
+
+```{R}
+error<-rep(0,dim(Weekly)[1])
+for (i in 1:dim(Weekly)[1]){
+  fit.glm<-fit.glm <- glm(Direction ~ Lag1 + Lag2, data = Weekly[-i, ],  family = "binomial")
+  pred.up <- predict.glm(fit.glm, Weekly[i, ], type = "response") > 0.5
+  true.up <- Weekly[i, ]$Direction == "Up"
+  if (pred.up != true.up)
+    error[i] <- 1
+}
+```
+
+> The above for loop predicts and codes 1 if error is made in prediction and 0 otherwise
+
+###**(e)**
+
+>Take the average of the n numbers obtained in (d)iv in order to
+obtain the LOOCV estimate for the test error. Comment on the
+results.
+
+###**Solution**
+
+```{R}
+mean(error)
+```
+
+>LOOCV estimate for the test error is **`r round(mean(error),4)*100` %**
+
+
+##**Problem 8**
+
+>We will now perform cross-validation on a simulated data set.
+
+###**(a)**
+
+>Generate a simulated data set as follows:
+>
+>set .seed (1)
+>
+>y=rnorm (100)
+>
+>x=rnorm (100)
+>
+>y=x-2* x^2+ rnorm (100)
+>
+>In this data set, what is n and what is p? Write out the model
+used to generate the data in equation form.
+
+###**Solution (a)**
+
+```{R}
+set.seed(1)
+y=rnorm(100)
+x<-rnorm(100)
+y=x-2*x^2+rnorm(100)
+```
+
+
+>Here the n=100 and p=3 (including intercept).
+>
+>the equation is $Y=B~0~ + B~1~*(X) + B~2~*(X)^2 + error$
+
+###**(b)**
+
+>Create a scatterplot of X against Y . Comment on what you find.
+
+###**Solution (b)**
+
+```{R}
+library(ggplot2)
+simulateddata<-data.frame(x,y)
+ggplot(simulateddata,aes(x=x,y=y))+
+  geom_point(shape=8)+
+  geom_smooth()
+```
+
+
+>From the plot it can be inferred that there exists a quadratic relationship between x and y variables
+
+###**(c)**
+
+>Set a random seed, and then compute the LOOCV errors that
+result from fitting the following four models using least squares:
+
+i. $Y = \beta0 + \beta1X + error$
+ii. $Y = \beta0 + \beta1X + \beta2X2 + error$
+iii. $Y = \beta0 + \beta1X + \beta2X2 + \beta3X3 + error$
+iv. $Y = \beta0 + \beta1X + \beta2X2 + \beta3X3 + \beta4X4 + error$
+
+###**Solution (c)**
+
+```{R}
+#i
+fit.glm1<-glm(y~x)
+cv.glm(simulateddata,fit.glm1)$delta[1]
+#ii
+fit.glm2<-glm(y~poly(x,2))
+cv.glm(simulateddata,fit.glm2)$delta[1]
+#iii
+fit.glm3<-glm(y~poly(x,3))
+cv.glm(simulateddata,fit.glm3)$delta[1]
+#iv
+fit.glm4<-glm(y~poly(x,4))
+cv.glm(simulateddata,fit.glm4)$delta[1]
+```
+
+> 
+>LOOCV error for $Y = \beta0 + \beta1X + error$ is **`r cv.glm(simulateddata,fit.glm1)$delta[1]`**
+>
+>LOOCV error for  $Y = \beta0 + \beta1X + \beta2X2 + error$ is **`r cv.glm(simulateddata,fit.glm2)$delta[1]`**
+>
+>LOOCV error for $Y = \beta0 + \beta1X + \beta2X2 + \beta3X3 + error$ is **`r cv.glm(simulateddata,fit.glm3)$delta[1]`**
+>
+>LOOCV error for $Y = \beta0 + \beta1X + \beta2X2 + \beta3X3 + \beta4X4 + error$ is **`r cv.glm(simulateddata,fit.glm4)$delta[1]`**
+>
+>The quadratic relationship was observed from the scatter plot between x and y variables. The cross-validation error is least for the quadratic function $Y = \beta0 + \beta1X + \beta2X2 + error$ and is obtained as **`r cv.glm(simulateddata,fit.glm2)$delta[1]`**
+
+
+###**(d)**
+
+>Repeat (c) using another random seed, and report your results.
+Are your results the same as what you got in (c)? Why?
+
+###**Solution (d)**
+
+```{R}
+set.seed(2)
+#i
+fit.glm1.2<-glm(y~x)
+cv.glm(simulateddata,fit.glm1.2)$delta[1]
+#ii
+fit.glm2.2<-glm(y~poly(x,2))
+cv.glm(simulateddata,fit.glm2.2)$delta[1]
+#iii
+fit.glm3.2<-glm(y~poly(x,3))
+cv.glm(simulateddata,fit.glm3.2)$delta[1]
+#iv
+fit.glm4.2<-glm(y~poly(x,4))
+cv.glm(simulateddata,fit.glm4.2)$delta[1]
+```
+
+>The result obtained with different seed is very close to previous result. This was expected as the model is built using the entire data set but one observation
+
+###**(e)**
+
+>Which of the models in (c) had the smallest LOOCV error? Is
+this what you expected? Explain your answer.
+
+###**Solution (e)**
+
+>The The cross-validation error is least for the quadratic function $Y = \beta0 + \beta1X + \beta2X2 + error$ and is obtained as **`r cv.glm(simulateddata,fit.glm2)$delta[1]`**
+>
+>This was expected, as the plot showed quadratic relationship  between x and y.
+
+
+###**(f)**
+
+>Comment on the statistical significance of the coefficient estimates
+that results from fitting each of the models in (c) using
+least squares. Do these results agree with the conclusions drawn
+based on the cross-validation results?
+
+###**Solution (f)**
+
+```{R}
+summary(fit.glm4)
+```
+
+>From the summary of the model it is observed that only the linear and quadratic variables are significant in the model. The results of cross validation pointed out that least error is obtained for **$Y = \beta0 + \beta1X + \beta2X2 + error$**
+
+
+##**Problem 9**
+
+>We will now consider the Boston housing data set, from the MASS
+library.
+
+###**(a)**
+
+>Based on this data set, provide an estimate for the population
+mean of medv. Call this estimate \mu.
+
+###**Solution (a)**
+
+```{R}
+library(MASS)
+attach(Boston)
+sample_mu<-mean(medv)
+sample_mu
+```
+
+>The sample mean is **`r sample_mu`**
+
+###**(b)**
+
+>Provide an estimate of the standard error of \mu. Interpret this
+result.
+Hint: We can compute the standard error of the sample mean by
+dividing the sample standard deviation by the square root of the
+number of observations.
+
+
+###**Solution (b)**
+
+```{R}
+sample_se<-sd(medv)/sqrt(nrow(Boston))
+sample_se
+```
+
+>The estimate of the standard error of \mu is **`r sample_se`**
+>
+>The data set is the sample representing the population of Boston. The standard error gives us the accuracy of the estimate i.e. how much the mean will vary if different sample was chosen
+
+
+###**(c)**
+
+>Now estimate the standard error of \mu using the bootstrap. How
+does this compare to your answer from (b)?
+
+```{R}
+library(boot)
+set.seed(1)
+boot.fn<-function(data,index){
+  mu<-mean(data[index])
+  return(mu)
+}
+set.seed(1)
+boot(medv,boot.fn,100)
+```
+
+>The standard error obtained from bootstrapping is close to the one obtained earlier
+
+###**(d)**
+
+>Based on your bootstrap estimate from (c), provide a 95% confidence
+interval for the mean of medv. Compare it to the results
+obtained using t.test(Boston$medv).
+>
+>Hint: You can approximate a 95% confidence interval using the
+formula [$\mu$ - 2SE($\mu$), $\mu$ + 2SE($\mu$)]
+
+###**Solution (d)**
+```{R}
+t.test(medv)
+ci.mu<-c(sample_mu-2*0.3815554,sample_mu+2*0.3815554)
+ci.mu
+```
+
+>The confidence interval obtained is very similar to the one obtained from t test
+
+###**(e)**
+
+>Based on this data set, provide an estimate, $\mu$ med, for the median
+value of medv in the population.
+
+###**Solution (e)**
+
+```{R}
+mu_median<-median(medv)
+mu_median
+```
+
+>The estimate for the median is **`r mu_median`**
+
+###**(f)**
+
+>We now would like to estimate the standard error of $\mu$ med. Unfortunately,
+there is no simple formula for computing the standard
+error of the median. Instead, estimate the standard error of the
+median using the bootstrap. Comment on your findings.
+
+###**Solution (f)**
+
+```{R}
+library(boot)
+set.seed(1)
+boot.fn<-function(data,index){
+  mu.median<-median(data[index])
+  return(mu.median)
+}
+set.seed(1)
+boot(medv,boot.fn,100)
+```
+
+>Here we computed the standard error of median using bootstrapping. This showcases how easily we can implement bootstrapping concept to find standard error when statistical softwares do no directly give us the value
+
+###**(g)**
+
+>Based on this data set, provide an estimate for the tenth percentile
+of medv in Boston suburbs. Call this quantity $\mu$ 0.1. (You
+can use the quantile() function.)
+
+###**Solution (g)**
+
+```{R}
+mu.quantile<-quantile(medv,c(0.1))
+mu.quantile
+```
+
+>The estimate for the tenth percentile of medv in Boston suburbs is obtaines as **`r mu.quantile`**
+
+###**(h)**
+
+>Use the bootstrap to estimate the standard error of \mu 0.1. Comment
+on your findings.
+
+###**Solution (h)**
+
+```{R}
+
+boot.fn <- function(data, index) {
+  mu.quantile <- quantile(data[index], c(0.1))
+  return (mu.quantile)
+}
+boot(medv, boot.fn, 1000)
+```
+
+
+>The standard error is obtained using bootstrapping and the value is small compared to the tenth percentile which means the estimate is representing the population quite accurately.
+
