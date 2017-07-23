@@ -1,0 +1,827 @@
+---
+title: "An Introduction to Statistical Learning chapter 4 : Solutions"
+author: "Swapnil Sharma"
+date: "July 9, 2017"
+output: html_document
+---
+#Chapter 4 Classification: 
+
+####*Logistic Regression, Linear Discriminant Analysis, Quadratic Discriminant Analysis, K Nearest Neighbour (KNN)*
+
+
+>*Conceptual (1-9) and Applied (10-13) *  
+
+
+
+#{.tabset}
+
+##Problem 1
+
+###Using a little bit of algebra, prove that (4.2) is equivalent to (4.3).In other words, the logistic function representation and logit representation for the logistic regression model are equivalent.
+
+>**Solution** 
+>
+>To prove
+>$p(X) =(e^{ B0 + B1X }) / (1 + e^{ B0 + B~1~X })$ ..(4.2)  
+>&    
+>$p(X) / (1 - p(X)) = e^{ B0 + B1X }$ ..(4.3)  
+>are equal.
+>We can get this by using property of ratio and proportions (componendo and dividendo). Subtract numerator from denominator on both sides of (4.2) to  get (4.3)
+
+
+##Problem 2
+
+###It was stated in the text that classifying an observation to the class for which (4.12) is largest is equivalent to classifying an observation to the class for which (4.13) is largest. Prove that this is the case. In other words, under the assumption that the observations in the kth class are drawn from a   
+
+$N(\mu_k, \sigma^2)$
+
+###distribution, the Bayes' classifier assigns an observation to the class for which the discriminant function is maximized.
+
+>**Solution**
+
+
+
+##Problem 3
+
+###This problem relates to the QDA model, in which the observations within each class are drawn from a normal distribution with a classspecific mean vector and a class specific covariance matrix. We consider the simple case where p = 1; i.e. there is only one feature. Suppose that we have K classes, and that if an observation belongs to the kth class then X comes from a one-dimensional normal distribution,  
+$X ~ N(\mu_k,\sigma^2_k)$
+
+###Recall that the density function for the one-dimensional normal distribution is given in (4.11). Prove that in this case, the Bayes' classifier is not linear. Argue that it is in fact quadratic.
+
+>**Solution**
+
+
+##Problem 4
+
+###When the number of features p is large, there tends to be a deterioration in the performance of KNN and other local approaches that perform prediction using only observations that are near the test observation for which a prediction must be made. This phenomenon is known as the curse of dimensionality, and it ties into the fact that curse of dinon- parametric approaches often perform poorly when p is large. We mensionality will now investigate this curse
+
+>(a)
+>Suppose that we have a set of observations, each with measurements on p = 1 feature, X. We assume that X is uniformly (evenly) distributed on [0, 1]. Associated with each observation is a response value. Suppose that we wish to predict a test observation's response using only observations that are within 10% of the range of X closest to that test observation. For instance, in order to predict the response for a test observation with X = 0.6, we will use observations in the range [0.55, 0.65]. On average, what fraction of the available observations will we use to make the prediction?
+
+>**Solution (a)**
+
+
+>(b)
+>Now suppose that we have a set of observations, each with
+>measurements on p = 2 features, X1 and X2. We assume that
+>(X1,X2) are uniformly distributed on [0, 1] × [0, 1]. We wish to
+>predict a test observation's response using only observations that
+>are within 10% of the range of X1 and within 10% of the range
+>of X2 closest to that test observation. For instance, in order to
+>predict the response for a test observation with X1 = 0.6 and
+>X2 = 0.35, we will use observations in the range [0.55, 0.65] for
+>X1 and in the range [0.3, 0.4] for X2. On average, what fraction
+>of the available observations will we use to make the prediction?
+
+>**Solution (b)**
+
+
+>(c)
+>Now suppose that we have a set of observations on p = 100 features.
+>Again the observations are uniformly distributed on each
+>feature, and again each feature ranges in value from 0 to 1. We
+>wish to predict a test observation's response using observations
+>within the 10% of each feature's range that is closest to that test
+>observation. What fraction of the available observations will we
+>use to make the prediction?
+
+>**Solution (c)**
+
+
+>(d)
+>Using your answers to parts (a)-(c), argue that a drawback of
+>KNN when p is large is that there are very few training observations
+>"near" any given test observation.
+
+>**Solution (d)**
+
+
+>(e)
+>Now suppose that we wish to make a prediction for a test observation
+>by creating a p-dimensional hypercube centered around
+>the test observation that contains, on average, 10% of the training
+>observations. For p = 1, 2, and 100, what is the length of
+>each side of the hypercube? Comment on your answer.
+
+
+>**Solution (e)**
+
+
+##Problem 5
+
+###We now examine the differences between LDA and QDA
+
+>(a)
+>If the Bayes decision boundary is linear, do we expect LDA or
+>QDA to perform better on the training set? On the test set?
+
+>**Solution (a)**
+>
+>If the Bayes decision boundary is linear, we expect **QDA** 
+>to perform better on the **training** set due to its flexibility and **LDA** On the **test** set.
+
+>(b)
+>If the Bayes decision boundary is non-linear, do we expect LDA
+>or QDA to perform better on the training set? On the test set?
+
+>**Solution (b)**
+>
+>If the Bayes decision boundary is non-linear, we expect **QDA** 
+>to perform better on the **training** set as well as On the **test** set
+
+
+>(c)
+>In general, as the sample size n increases, do we expect the test
+>prediction accuracy of QDA relative to LDA to improve, decline,
+>or be unchanged? Why?
+
+>**Solution (c)**
+>
+>In general **QDA** fits better when the sample size n increases as the variance is no longer a concern.It is a concern for QDA when sample size is small and variance for different classes is not same
+
+
+>(d)
+>True or False: Even if the Bayes decision boundary for a given
+>problem is linear, we will probably achieve a superior test error
+>rate using QDA rather than LDA because QDA is flexible
+>enough to model a linear decision boundary. Justify your answer
+
+>**Solution (d)**
+>
+>**False.** With high variance for more flexible approach of QDA we may overfit the data for small number of observations and get inferior test error rate
+
+
+##Problem 6
+
+###Suppose we collect data for a group of students in a statistics class with variables X1 =hours studied, X2 =undergrad GPA, and Y = receive an A. We fit a logistic regression and produce estimated coefficient,  B0 = - 6, B1 = 0.05, B2 = 1
+
+>(a)
+>Estimate the probability that a student who studies for 40 h and
+>has an undergrad GPA of 3.5 gets an A in the class
+
+>**Solution (a)**
+>
+>$log(p/(1-p)) = -6 + (0.05)*(40) + 1*(3.5)$ ... (A)
+>
+>Solving the above equation for p, we get p = **0.3775407**
+
+>(b)
+>How many hours would the student in part (a) need to study to
+>have a 50% chance of getting an A in the class?
+
+>**Solution (b)**
+>
+>using p=0.5 in above equation (A) we have
+>$log(0.5/(1-0.5)) = -6 + (0.05)*(x) + 1*(3.5)$
+>
+>Solving for x we get x=**50**
+
+
+##Problem 7
+
+###Suppose that we wish to predict whether a given stock will issue a dividend this year ("Yes" or "No") based on X, last year's percent profit.We examine a large number of companies and discover that the mean value of X for companies that issued a dividend was X = 10, while the mean for those that didn't was X = 0. In addition, the variance of X for these two sets of companies was 
+$\sigma^2 = 36$. 
+
+###Finally, 80% of companies issued dividends. Assuming that X follows a normal distribution, predict the probability that a company will issue a dividend this year given that its percentage profit was X = 4 last year.
+
+>**Solution**
+>
+>Here we have two classes i.e. k=2. For k=1, $\pi_k=0.8$
+>To solve we substitute x=4, $\sigma = 36$, $\mu_k = 10$ in the >equation and get p(4)=**0.753**
+>
+>$p(4)=(0.8*e^{ - (1/72)*(4 - 10)^2})/(0.8*e^{ - (1/72)*(4 - 10)^2}+0.2*e^{ - (1/72)*(4 - 0)^2})$
+
+
+##Problem 8
+
+
+###Suppose that we take a data set, divide it into equally-sized training and test sets, and then try out two different classification procedures. First we use logistic regression and get an error rate of 20% on the training data and 30% on the test data. Next we use 1-nearest neighbors (i.e. K = 1) and get an average error rate (averaged over both test and training data sets) of 18%. Based on these results, which method should we prefer to use for classification of new observations? Why?
+
+>**Solution**
+
+
+##Problem 9
+
+###This problem has to do with odds
+
+>(a)
+>On average, what fraction of people with an odds of 0.37 of
+>defaulting on their credit card payment will in fact default?
+
+>**Solution (a)**
+>
+>odds=p(d)/1-p(d)
+>
+>We are given odds of default which means 
+>
+>$p(d)/(1-p(d))=0.37$ solving for p(d) we get p(d)= **0.27**
+>
+>That is on an average 27 out of 100 people will default when the odds of default is 0.37
+
+>(b)
+
+>Suppose that an individual has a 16% chance of defaulting on
+>her credit card payment. What are the odds that she will default?
+
+
+>**Solution (b)**
+>
+>Here we need to find odd of default given the probability of default p(d)=16%  
+>so 1-p(d)=84%
+>and hence odds=**0.19**
+
+
+
+##Problem 10
+
+###This question should be answered using the Weekly data set, which is part of the ISLR package. This data is similar in nature to the Smarket data from this chapter's lab, except that it contains 1, 089 weekly returns for 21 years, from the beginning of 1990 to the end of 2010.
+
+
+>**(a)**
+>
+>Produce some numerical and graphical summaries of the Weekly data. Do there appear to be any patterns?
+
+
+>**Solution (a)**
+
+```{R warning=FALSE, message=FALSE}
+#install.packages("ISLR")
+#install.packages("MASS")
+library(ISLR)
+library(MASS)
+attach(Weekly)
+#check size of dataframe
+dim(Weekly)
+#View the dataset
+head(Weekly)
+#class of variables of dataset
+str(Weekly)
+#Summary of data
+summary(Weekly)
+#finding correlation
+correlation<-cor(Weekly[-9])
+correlation
+#visualize correlation
+#install.packages("corrplot")
+library(corrplot)
+corrplot(correlation,type="upper")
+#install.packages("ggplot2")
+library(ggplot2)
+
+# Plotting correlated variables as timeseries data Volume vs Year
+volumetimeseries <- ts(Volume, frequency=52, start=c(1990,1))
+plot.ts(volumetimeseries)
+```
+
+
+>The summary statistics and correlation statistics are obtained to study the relation between variables and from visualization it is clear that Volume and Year are correlated. This can be deciphered as Volume is increasing over the years which is also shown in the time series plot.
+
+
+>**(b)**
+>
+>Use the full data set to perform a logistic regression with Direction as the response and the five lag variables plus Volume as predictors. Use the summary function to print the results. Do any of the predictors appear to be statistically significant? If so, which ones?
+
+
+>**Solution (b)**
+
+
+```{R}
+#full model
+glm.fit=glm(Direction~Lag1+Lag2+Lag3+Lag4+Lag5+Volume, data=Weekly,family = binomial)
+summary(glm.fit)
+```
+
+
+>The model is built with all the variables and from summary statistics it is found that **Lag2** is statistically significant.
+
+
+>**(c)**
+>
+>Compute the confusion matrix and overall fraction of correct predictions. Explain what the confusion matrix is telling you about the types of mistakes made by logistic regression
+
+
+>**Solution (c)**
+
+```{R}
+#Confusion matrix for full model
+
+glm.probs<-predict(glm.fit,type="response")
+#glm.pred=rep("Down",1089)
+#glm.pred[glm.probs>0.5]="Up"
+#table(glm.pred,Direction)
+#mean(glm.pred==Direction)
+
+predicted<-glm.probs>0.5
+predicted<-as.numeric(predicted)
+table(Direction, predicted, dnn = c("Actual Direction", "Predicted Direction"))
+
+#model accuracy
+oa<-(54+557)/(length(predicted))
+oa
+sensitivity<-557/(557+430)
+sensitivity
+specificity<-(54)/(54+48)
+specificity
+precision<-557/(557+48)
+precision
+type1error<-48/(48+54)
+type1error
+```
+
+
+>The overall accuracy of model is **`r round(oa*100,2)`** percent. The sensitivity is **`r round(sensitivity*100,2)`** percent which tells that we are able to perform better than baseline. But this is the model built on the entire data set and we need to see results for testing data. 
+
+
+>**(d)**
+>
+>Compute the confusion matrix and overall fraction of correct predictions. Explain what the confusion matrix is telling you about the types of mistakes made by logistic regression.
+
+
+>**Solution (d)**
+
+```{R}
+#data partitioning and predicting for test data
+train<-(Year<2009)
+Weekly.0910<-Weekly[!train,]
+dim(Weekly.0910)
+Direction.0910=Direction[!train]
+glm.fit=glm(Direction~Lag2, data=Weekly,family = binomial, subset=train)
+glm.probs=predict(glm.fit,Weekly.0910,type="response")
+glm.pred=rep("Down",104)
+glm.pred[glm.probs>0.5]="Up"
+table(Direction.0910,glm.pred,dnn = c("Actual Direction", "Predicted Direction"))
+mean<-mean(glm.pred==Direction.0910)
+mean
+```
+
+
+>Using only the most significant variable , **Lag 2**, in our *logistic regression* model we find the over all accuracy of model to increase to **`r round(mean*100,2)`**
+percent.
+
+
+>**(e)**
+>
+>Repeat (d) using LDA.
+
+>**Solution (e)**
+
+```{R}
+#LDA
+lda.fit<-lda(Direction~Lag2,data=Weekly,subset=train)
+lda.predict=predict(lda.fit,Weekly.0910)
+lda.class=lda.predict$class
+table(Direction.0910,lda.class,dnn = c("Actual Direction", "Predicted Direction"))
+mean<-mean(lda.class==Direction.0910)
+```
+
+>Using *Linear Discriminant Analysis* we get overall accuracy to be **`r round(mean*100,2)`** percent which is same as Logistic Regression.
+
+
+>**(f)**
+>
+>Repeat (d) using QDA.
+
+>**Solution (f)**
+
+```{R}
+#QDA
+qda.fit<-qda(Direction~Lag2,data=Weekly,subset=train)
+qda.predict=predict(qda.fit,Weekly.0910)
+qda.class=qda.predict$class
+table(Direction.0910,qda.class,dnn = c("Actual Direction", "Predicted Direction"))
+mean<-mean(qda.class==Direction.0910)
+```
+
+
+>Using *Quadratic Discriminant Analysis* we get overall accuracy to be **`r round(mean*100,2)`** percent. *QDA* predicts that direction will always be **up**
+
+
+
+>**(g)**
+>
+>Repeat (d) using KNN with k=1.
+
+>**Solution (g)**
+
+```{R}
+#KNN
+library(class)
+train.x<-as.matrix(Lag2[train])
+dim(train.x)
+test.x<-as.matrix(Lag2[!train])
+train.Direction<-Direction[train]
+set.seed(1)
+knn.pred<-knn(train.x,test.x,train.Direction,k=1)
+table(Direction.0910,knn.pred,dnn = c("Actual Direction", "Predicted Direction"))
+mean<-(21+31)/(21+31+22+30)
+mean
+```
+
+
+>Using *KNN* method we get accuracy of **`r round(mean*100,2)`** percent. We are using only Lag2 as a variable in the matrix to find nearest neighbour.
+
+
+>**(h)**
+>
+>Which of these methods appears to provide the best results on this data?
+
+
+>**Solution (h)**
+>
+>If we use overall accuracy of the model as our judging criteria we get **Logistic Regression & LDA** giving best results.
+
+>**(i)**
+>
+>Experiment with different combinations of predictors, including possible transformations and interactions, for each of the methods. Report the variables, method, and associated confusion matrix that appears to provide the best results on the held out data. Note that you should also experiment with values for K in the KNN classifier.
+
+
+>**Solution (i)**
+
+```{R}
+#Models with (Lag1), (Lag2) and their interaction
+
+#Logistic
+glm.fit=glm(Direction~Lag1*Lag2, data=Weekly,family = binomial, subset=train)
+glm.probs=predict(glm.fit,Weekly.0910,type="response")
+glm.pred=rep("Down",104)
+glm.pred[glm.probs>0.5]="Up"
+table(Direction.0910,glm.pred,dnn = c("Actual Direction", "Predicted Direction"))
+mean(glm.pred==Direction.0910)
+
+#LDA
+lda.fit<-lda(Direction~Lag2*Lag1,data=Weekly,subset=train)
+lda.predict=predict(lda.fit,Weekly.0910)
+lda.class=lda.predict$class
+table(Direction.0910,lda.class,dnn = c("Actual Direction", "Predicted Direction"))
+mean(lda.class==Direction.0910)
+
+#QDA
+qda.fit<-qda(Direction~Lag2*Lag1,data=Weekly,subset=train)
+qda.predict=predict(qda.fit,Weekly.0910)
+qda.class=qda.predict$class
+table(Direction.0910,qda.class,dnn = c("Actual Direction", "Predicted Direction"))
+mean(qda.class==Direction.0910)
+
+#KNN after standardizing all variables and using all the variables not just lag 2 for k=1, 10,100
+
+attach(Weekly)
+Weeklymod<-Weekly[,c(2:6)]
+standardized.x<-scale(Weeklymod)
+test<-986:1089
+train.x<-standardized.x[-test,]
+test.x<-standardized.x[test,]
+train.y=Direction[-test]
+test.y=Direction[test]
+set.seed(1)
+knn.pred<-knn(train.x,test.x,train.y,k=10)
+table(test.y,knn.pred,dnn = c("Actual Direction", "Predicted Direction"))
+accu<-(17+41)/length(test.y)
+accu
+```
+
+
+##Problem 11
+
+###In this problem, you will develop a model to predict whether a given car gets high or low gas mileage based on the Auto data set.
+
+
+>**(a)**
+>
+>Create a binary variable, mpg01, that contains a 1 if mpg contains
+a value above its median, and a 0 if mpg contains a value below
+its median. You can compute the median using the median()
+function. Note you may find it helpful to use the data.frame()
+function to create a single data set containing both mpg01 and
+the other Auto variables.
+
+
+>**Solution (a)**
+
+```{R warning=FALSE, message=FALSE}
+attach(Auto)
+Auto1<-Auto
+Auto1$mpg0<-ifelse(Auto1$mpg>median(Auto1$mpg),1,0)
+```
+
+>**(b)**
+>
+>Explore the data graphically in order to investigate the association between mpg01 and the other features. Which of the other features seem most likely to be useful in predicting mpg01? Scatterplots and boxplots may be useful tools to answer this question. Describe your findings.
+
+>**Solution (b)**
+
+```{R warning=FALSE, message=FALSE}
+library(corrplot)
+M<-cor(Auto1[,-9])
+corrplot(M, type="upper")
+```
+
+>It is clear from the correlation plot that **cylinders, displacement, horsepower, and weight** are associated with mpg0. The association is inverse in relation.
+
+>**(c)**
+>
+>Split the data into a training set and a test set.
+
+>**Solution (c)**
+
+>The Data set is split randomly into 70-30 ratio. Training data have 70% of observations while testing data have 30%
+
+```{R warning=FALSE, message=FALSE}
+set.seed(1)
+subset <- sample(nrow(Auto1), nrow(Auto1) * 0.7)
+autotrain = Auto1[subset, ]
+autotest = Auto1[-subset, ]
+dim(autotrain)
+dim(autotest)
+```
+
+>**(d)**
+>
+>Perform LDA on the training data in order to predict mpg01 using the variables that seemed most associated with mpg01 in (b). What is the test error of the model obtained?
+
+>**Solution (d)**
+
+
+
+```{R warning=FALSE, message=FALSE}
+set.seed(1)
+autotrain.lda.fit<-lda(mpg0~cylinders+displacement+horsepower+weight,data=autotrain)
+autotest.lda.predict=predict(autotrain.lda.fit,autotest)
+autotest.lda.class=autotest.lda.predict$class
+table(autotest$mpg0,autotest.lda.class,dnn = c("Actual Mileage", "Predicted Mileage"))
+round(mean(autotest.lda.class!=autotest$mpg0),3)
+```
+
+>**LDA** Test error is **`r round(mean(autotest.lda.class!=autotest$mpg0),3)`** for model with variables cylinders,displacement,horsepower,weight
+
+
+>**(e)**
+>
+>Perform QDA on the training data in order to predict mpg01 using the variables that seemed most associated with mpg01 in (b). What is the test error of the model obtained?
+
+>**Solution (e)**
+
+```{R warning=FALSE, message=FALSE}
+set.seed(1)
+autotrain.qda.fit<-qda(mpg0~cylinders+displacement+horsepower+weight,data=autotrain)
+autotest.qda.predict=predict(autotrain.qda.fit,autotest)
+autotest.qda.class=autotest.qda.predict$class
+table(autotest$mpg0,autotest.qda.class,dnn = c("Actual Mileage", "Predicted Mileage"))
+round(mean(autotest.qda.class!=autotest$mpg0),3)
+```
+
+>**QDA** Test error is **`r round(mean(autotest.qda.class!=autotest$mpg0),3)`** for model with variables cylinders,displacement,horsepower,weight
+
+>**(f)**
+>
+>Perform logistic regression on the training data in order to predict mpg01 using the variables that seemed most associated with
+mpg01 in (b). What is the test error of the model obtained?
+
+
+>**Solution (f)**
+
+```{R warning=FALSE, message=FALSE}
+set.seed(1)
+autotrain.glm.fit<-glm(mpg0~cylinders+displacement+horsepower+weight,data=autotrain,family = binomial)
+autotest.glm.predict=predict(autotrain.glm.fit,autotest,type="response")
+autotest.glm.class=ifelse(autotest.glm.predict>0.5,1,0)
+table(autotest$mpg0,autotest.glm.class,dnn = c("Actual Mileage", "Predicted Mileage"))
+round(mean(autotest.glm.class!=autotest$mpg0),3)
+```
+
+>**Logistic Regression** Test error is **`r round(mean(autotest.glm.class!=autotest$mpg0),3)`** for model with variables cylinders,displacement,horsepower,weight
+
+
+>**(g)**
+>
+>Perform KNN on the training data, with several values of K, in order to predict mpg01. Use only the variables that seemed most associated with mpg01 in (b). What test errors do you obtain? Which value of K seems to perform the best on this data set?
+
+>**Solution (g)**
+
+```{R warning=FALSE, message=FALSE}
+#subsetting data set with desired variables
+autoknn<-Auto1[,c(2,3,4,5,10)]
+#standardizing variables for knn
+standardizedautoknn<-scale(autoknn[,-5])
+#setting seed
+set.seed(1)
+#dividing in train and test data
+subset <- sample(nrow(autoknn), nrow(autoknn) * 0.7)
+autotrainknn = autoknn[subset, ]
+autotestknn = autoknn[-subset, ]
+library(class)
+set.seed(1)
+#KNN with k=5
+knn.pred<-knn(autotrainknn[,-5],autotestknn[,-5],autotrainknn[,5],k=3)
+table(autotestknn[,5],knn.pred,dnn = c("Actual Mileage", "Predicted Mileage"))
+round(mean(autotestknn[,5]!=knn.pred),3)
+#KNN with k = 50
+knn.pred<-knn(autotrainknn[,-5],autotestknn[,-5],autotrainknn[,5],k=30)
+table(autotestknn[,5],knn.pred,dnn = c("Actual Mileage", "Predicted Mileage"))
+round(mean(autotestknn[,5]!=knn.pred),3)
+#KNN with k=100
+knn.pred<-knn(autotrainknn[,-5],autotestknn[,-5],autotrainknn[,5],k=120)
+table(autotestknn[,5],knn.pred,dnn = c("Actual Mileage", "Predicted Mileage"))
+round(mean(autotestknn[,5]!=knn.pred),3)
+```
+
+>**KNN** Test error is **`r round(mean(autotestknn[,5]!=knn.pred),3)`** for model with variables cylinders,displacement,horsepower,weight and  k=120
+>
+>From logistic regression, LDA,QDA, and KNN it is found that LDA performs best if test error is used as performance matrix
+
+
+
+##Problem 12
+
+###This problem involves writing functions.
+
+
+>**(a)**
+>
+>Write a function, Power(), that prints out the result of raising 2
+to the 3rd power. In other words, your function should compute
+2^3 and print out the results
+
+
+>**Solution (a)**
+
+```{R warning=FALSE, message=FALSE}
+Power<-function(){
+  2^3
+}
+print(Power())
+```
+
+>**(b)**
+>
+>Create a new function, Power2(), that allows you to pass any two numbers, x and a, and prints out the value of x^a. You can do this by beginning your function with the line > Power2 =function (x,a){
+You should be able to call your function by entering, for instance,
+Power2 (3,8) on the command line. This should output the value of 3^8, namely, 6, 561.
+
+
+>**Solution (b)**
+
+```{R warning=FALSE, message=FALSE}
+Power2=function(x,a){
+  x^a
+}
+```
+
+
+>**(c)**
+>
+>Using the Power2() function that you just wrote, compute 10^3, 8^17, and 131^3.
+
+>**Solution(c)**
+
+```{R warning=FALSE, message=FALSE}
+print(Power2(10,3))
+print(Power2(8,17))
+print(Power2(131,3))
+```
+
+>**(d)**
+>
+>Now create a new function, Power3(), that actually returns the
+result x^a as an R object, rather than simply printing it to the
+screen. That is, if you store the value x^a in an object called
+result within your function, then you can simply return() this
+result, using the following line:
+return (result )
+The line above should be the last line in your function, before
+the } symbol.
+
+>**Solution (d)**
+
+```{R warning=FALSE, message=FALSE}
+Power3<-function(x,a){
+  result=x^a
+  return(result)
+}
+```
+
+
+>**(e)**
+>
+>Now using the Power3() function, create a plot of f(x) = x2.
+The x-axis should display a range of integers from 1 to 10, and
+the y-axis should display x2. Label the axes appropriately, and
+use an appropriate title for the figure. Consider displaying either
+the x-axis, the y-axis, or both on the log-scale. You can do this
+by using log=''x'', log=''y'', or log=''xy'' as arguments to
+the plot() function.
+
+>**Solution (e)**
+
+
+```{R warning=FALSE, message=FALSE}
+x<-1:10
+plot(x, Power3(x,2),xlab="X",ylab="x^2",main="x^2 v/s x",type = 'l')
+
+plot(x, Power3(x,2),log='xy',xlab="Log of X",ylab="Log of x^2",main="Log of x^2 v/s Log of x",type='l')
+```
+
+
+>**(f)**
+>
+>Create a function, PlotPower(), that allows you to create a plot
+of x against x^a for a fixed a and for a range of values of x. For
+instance, if you call  PlotPower (1:10 ,3) then a plot should be created with an x-axis taking on values 1, 2, . . . , 10, and a y-axis taking on values 13, 23, . . . , 103.
+
+
+>**Solution (f)**
+
+```{R warning=FALSE, message=FALSE}
+
+PlotPower<-function(x,a){
+  results=x^a
+  return (results)
+}
+x<--100:100
+a<-3
+plot(x,PlotPower(x,a),xlab="x",ylab="x^a",main="Plot of x^a vs x",type="l")
+
+```
+
+
+##Problem 13
+
+###Using the Boston data set, fit classification models in order to predict whether a given suburb has a crime rate above or below the median. Explore logistic regression, LDA, and KNN models using various subsets of the predictors. Describe your findings.
+
+>**Solution (a)**
+```{R warning=FALSE, message=FALSE}
+attach(Boston)
+Boston1<-Boston
+#Creating crim0. It is coded as 1 if the value of crim is above median and 0 otherwise
+Boston1$crim0<-ifelse(Boston1$crim>median(Boston1$crim),1,0)
+#visulizing correlation
+library(corrplot)
+M<-cor(Boston1[,])
+corrplot.mixed(M)
+#splitting data
+set.seed(1)
+subset <- sample(nrow(Boston1), nrow(Boston1) * 0.7)
+Bostontrain = Boston1[subset, ]
+Bostontest = Boston1[-subset, ]
+#model with variables having correlation greater than 0.6 with medv0
+#LDA
+Bostontrain.lda.fit<-lda(crim0~indus+nox+age+dis+rad+tax,data=Bostontrain)
+Bostontest.lda.predict=predict(Bostontrain.lda.fit,Bostontest)
+Bostontest.lda.class=Bostontest.lda.predict$class
+table(Bostontest$crim0,Bostontest.lda.class,dnn = c("Actual Mileage", "Predicted Mileage"))
+round(mean(Bostontest.lda.class!=Bostontest$crim0),3)
+#QDA
+Bostontrain.qda.fit<-qda(crim0~indus+nox+age+dis+rad+tax,data=Bostontrain)
+Bostontest.qda.predict=predict(Bostontrain.qda.fit,Bostontest)
+Bostontest.qda.class=Bostontest.qda.predict$class
+table(Bostontest$crim0,Bostontest.qda.class,dnn = c("Actual Mileage", "Predicted Mileage"))
+round(mean(Bostontest.qda.class!=Bostontest$crim0),3)
+#Logistic regression
+Bostontrain.glm.fit<-glm(crim0~indus+nox+age+dis+rad+tax,data=Bostontrain,family = binomial)
+Bostontest.glm.predict=predict(Bostontrain.glm.fit,Bostontest,type="response")
+Bostontest.glm.class=ifelse(Bostontest.glm.predict>0.5,1,0)
+table(Bostontest$crim0,Bostontest.glm.class,dnn = c("Actual Mileage", "Predicted Mileage"))
+round(mean(Bostontest.glm.class!=Bostontest$crim0),3)
+#KNN 
+#subsetting relevant variables
+Bostonknn<-Boston1[,c(3,5,7,8,9,10,15)]
+#standardizing variables besides crim0
+standardizedBostonknn<-scale(Bostonknn[,-7])
+#set seed
+set.seed(1)
+#splitting the data
+subset <- sample(nrow(Bostonknn), nrow(Bostonknn) * 0.7)
+Bostontrainknn = Bostonknn[subset, ]
+Bostontestknn = Bostonknn[-subset, ]
+library(class)
+set.seed(1)
+#KNN with K=1
+knn.pred<-knn(Bostontrainknn[,-7],Bostontestknn[,-7],Bostontrainknn[,7],k=1)
+table(Bostontestknn[,7],knn.pred,dnn = c("Actual Mileage", "Predicted Mileage"))
+k1=round(mean(Bostontestknn[,7]!=knn.pred),3)
+#KNN with k=5
+knn.pred<-knn(Bostontrainknn[,-7],Bostontestknn[,-7],Bostontrainknn[,7],k=5)
+table(Bostontestknn[,7],knn.pred,dnn = c("Actual Mileage", "Predicted Mileage"))
+k5=round(mean(Bostontestknn[,7]!=knn.pred),3)
+#KNN with k=10
+knn.pred<-knn(Bostontrainknn[,-7],Bostontestknn[,-7],Bostontrainknn[,7],k=10)
+table(Bostontestknn[,7],knn.pred,dnn = c("Actual Mileage", "Predicted Mileage"))
+k10=round(mean(Bostontestknn[,7]!=knn.pred),3)
+```
+
+
+>Variables selected for the different models are : **indus, nox, age, dis, rad, tax**
+>
+>Test set error for various models are as below:
+>
+>**LDA**: **`r round(mean(Bostontest.lda.class!=Bostontest$crim0),3)`**
+>
+>**QDA**: **`r round(mean(Bostontest.qda.class!=Bostontest$crim0),3)`**
+>
+>**Logistic Regression**: **`r round(mean(Bostontest.glm.class!=Bostontest$crim0),3)`**
+>
+>**KNN for k=1**: **`r k1`**
+>
+>**KNN for k=5**: **`r k5`**
+>
+>**KNN for k=10**: **`r k10`**
+
